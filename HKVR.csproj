@@ -55,9 +55,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="HKVR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Assets\hkvr" />
+    <None Include="Assets\data.zip" />
     <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +77,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="Unity.XR.Management">
       <HintPath>$(ManagedPath)Unity.XR.Management.dll</HintPath>
     </Reference>

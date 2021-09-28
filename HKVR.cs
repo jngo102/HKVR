@@ -1,9 +1,15 @@
 ﻿using Modding;
+using System;
 using System.Collections;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Management;
 using Valve.VR;
+using UObject = UnityEngine.Object;
 
 namespace HKVR
 {
@@ -17,24 +23,26 @@ namespace HKVR
 
         public override void Initialize()
         {
+            ExtractZip();
+
             GameManager.instance.StartCoroutine(InitXR());
 
             AssetManager.Initialize();
             On.HeroController.Start += OnHCStart;
         }
 
-        private void OnHCStart(On.HeroController.orig_Start orig, HeroController self)
+        private void ExtractZip()
         {
-            orig(self);
-
-            _player = Object.Instantiate(AssetManager.FetchAsset<GameObject>("Player"), self.transform);
-            _player.transform.localPosition += Vector3.back * 25;
-            _player.AddComponent<KeepWorldScalePositive>();
-
-            Object.Destroy(GameObject.Find("_GameCameras/CameraParent/tk2dCamera"));
-            GameCameras.instance.hudCamera.gameObject.SetActive(true);
-            GameCameras.instance.hudCamera.transform.Find("Hud Canvas").position += Vector3.left * 10 + Vector3.up * 5;
+            string modPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName;
+            string zipFile = Directory.GetFiles(modPath, "*.zip").First();
+            string zipPath = Path.Combine(modPath, zipFile);
+            using (var stream = new FileStream(zipPath, FileMode.Open))
+            using (var archive = new ZipArchive(stream))
+            {
+                archive.ExtractToDirectory(Application.dataPath, true);
+            }
         }
+
         private IEnumerator InitXR()
         {
             StopXR();
@@ -80,6 +88,19 @@ namespace HKVR
 
             XRGeneralSettings.Instance.Manager.StopSubsystems();
             XRGeneralSettings.Instance.Manager.DeinitializeLoader();
+        }
+
+        private void OnHCStart(On.HeroController.orig_Start orig, HeroController self)
+        {
+            orig(self);
+
+            _player = UObject.Instantiate(AssetManager.FetchAsset<GameObject>("Player"), self.transform);
+            _player.transform.localPosition += Vector3.back * 25;
+            _player.AddComponent<KeepWorldScalePositive>();
+
+            UObject.Destroy(GameObject.Find("_GameCameras/CameraParent/tk2dCamera"));
+            GameCameras.instance.hudCamera.gameObject.SetActive(true);
+            GameCameras.instance.hudCamera.transform.Find("Hud Canvas").position += Vector3.left * 10 + Vector3.up * 5;
         }
     }
 }
