@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D812C3B-9E38-48BB-9F4D-3579E2D997A9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HKVR</RootNamespace>
+    <AssemblyName>HKVR</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- The common relative path to Hollow Knight on all platforms -->
+    <HKRelPath>/Steam/steamapps/common/Hollow%20Knight/</HKRelPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Set the path to the Hollow Knight folder -->
+    <HKPath Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">~/.local/share$(HKRelPath)</HKPath>
+    <HKPath Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">~/Library/Application Support$(HKRelPath)</HKPath>
+    <HKPath Condition="$(OS) == Windows_NT">$(MSBuildProgramFiles32)$(HKRelPath)</HKPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Set the path to the Hollow Knight executable -->
+    <SteamApp Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">$(HKPath)../../../steam</SteamApp>
+    <SteamApp Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">$(HKPath)../../../steam.app</SteamApp>
+    <SteamApp Condition="$(OS) == Windows_NT">$(HKPath)..\..\..\steam.exe</SteamApp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Set the path to HK's Managed folder -->
+    <ManagedPath>$(HKPath)hollow_knight_Data/Managed/</ManagedPath>
+    <!-- Set the path to the exported mods folder -->
+    <ExportPath>C:/HK/Mods/</ExportPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssetManager.cs" />
+    <Compile Include="HKVR.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Assets\hkvr" />
+    <None Include="ReadMe.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ManagedPath)Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="MMHOOK_Assembly-CSharp">
+      <HintPath>$(ManagedPath)MMHOOK_Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SteamVR">
+      <HintPath>$(ManagedPath)SteamVR.dll</HintPath>
+    </Reference>
+    <Reference Include="SteamVR_Actions">
+      <HintPath>$(ManagedPath)SteamVR_Actions.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Unity.XR.Management">
+      <HintPath>$(ManagedPath)Unity.XR.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.XR.OpenVR, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>$(ManagedPath)Unity.XR.OpenVR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ManagedPath)UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>$(ManagedPath)UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ManagedPath)UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ManagedPath)UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ManagedPath)UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ManagedPath)UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)/Microsoft.CSharp.targets" />
+  <Target Name="CopyMod" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="$(ExportPath)$(TargetName)/" />
+    <MakeDir Directories="$(ExportPath)$(TargetName)/" />
+    <MakeDir Directories="$(ExportPath)$(TargetName)/zip/" />
+    <MakeDir Condition="!Exists('$(ManagedPath)Mods/$(TargetName)')" Directories="$(ManagedPath)Mods/$(TargetName)" />
+    <Copy SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(ManagedPath)Mods/$(TargetName)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ExportPath)$(TargetName)/" />
+    <Copy SourceFiles="ReadMe.md;$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(ExportPath)$(TargetName)/zip/" />
+    <ZipDirectory SourceDirectory="$(ExportPath)$(TargetName)/zip/" DestinationFile="$(ExportPath)$(TargetName)/$(TargetName).zip" />
+    <RemoveDir Directories="$(ExportPath)/$(TargetName)/zip/" />
+    <GetFileHash Files="$(ExportPath)$(TargetName)/$(TargetName).zip" Algorithm="SHA256">
+      <Output TaskParameter="Items" ItemName="FilesWithHashes" />
+    </GetFileHash>
+    <WriteLinesToFile File="$(ExportPath)$(TargetName)/SHA.txt" Lines="@(FilesWithHashes->'%(FileHash)')" Overwrite="true" Encoding="UTF-8" />
+    <!-- Start Hollow Knight -->
+    <Exec Command="&quot;$(SteamApp)&quot; steam://rungameid/367520" />
+  </Target>
+</Project>
